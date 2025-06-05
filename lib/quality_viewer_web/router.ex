@@ -18,18 +18,17 @@ defmodule QualityViewerWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    #get "/video/:id/:quality", VideoController, :serve
+    # get "/video/:id/:quality", VideoController, :serve
 
     live "/video/:id", VideoLive
     live "/upload", UploadLive
   end
 
   # Other scopes may use custom stacks.
-  scope "/api", QualityViewerWeb do
-    pipe_through :api
+  # scope "/api", QualityViewerWeb do
+  #   pipe_through :api
 
-    post "/convert/:id", ConvertController, :shedule
-  end
+  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:quality_viewer, :dev_routes) do
