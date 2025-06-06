@@ -18,7 +18,7 @@ defmodule QualityViewerWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    # get "/video/:id/:quality", VideoController, :serve
+    get "/video/:id/:quality", VideoController, :show
 
     live "/video/:id", VideoLive
     live "/upload", UploadLive
