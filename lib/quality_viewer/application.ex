@@ -16,7 +16,8 @@ defmodule QualityViewer.Application do
       # Start a worker by calling: QualityViewer.Worker.start_link(arg)
       # {QualityViewer.Worker, arg},
       # Start to serve requests, typically the last entry
-      QualityViewerWeb.Endpoint
+      QualityViewerWeb.Endpoint,
+      QualityViewer.Transcode.Queue
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
