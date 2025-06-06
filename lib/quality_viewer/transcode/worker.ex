@@ -2,7 +2,7 @@ defmodule QualityViewer.Transcode.Worker do
   def run(path, {label, resolution}, id) do
     output_path = Path.dirname(path) <> "/#{label}.mp4"
 
-    IO.puts("[WORKER] #{output_path}")
+    Logger.log
 
     System.cmd("ffmpeg", [
       "-i",
