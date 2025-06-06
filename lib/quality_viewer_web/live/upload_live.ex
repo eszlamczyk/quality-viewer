@@ -17,24 +17,32 @@ defmodule QualityViewerWeb.UploadLive do
 
   @impl true
   def handle_event("save", _params, socket) do
-    id =
-      consume_uploaded_entries(socket, :video, fn %{path: path}, _entry ->
-        id = :crypto.strong_rand_bytes(4) |> Base.encode16()
-        dir_path = "tmp/QualityViewer/videos/#{id}"
+    consume_uploaded_entries(socket, :video, fn %{path: path}, _entry ->
+      id = :crypto.strong_rand_bytes(4) |> Base.encode16()
+      dir_path = "tmp/QualityViewer/videos/#{id}"
 
-        # In case of future development add perhaps add a case cond
-        # with flash message of error?
-        File.mkdir_p!(dir_path)
+      # In case of future development add perhaps add a case cond
+      # with flash message of error?
+      File.mkdir_p!(dir_path)
 
-        original_file_path = Path.join(dir_path, Path.basename(path))
-        File.cp!(path, original_file_path)
+      original_file_path = Path.join(dir_path, Path.basename(path))
+      File.cp!(path, original_file_path)
 
-        %{scheduled: true, id: new_id} = ConvertScheduler.schedule(original_file_path, id)
+      case ConvertScheduler.schedule(original_file_path, id) do
+        %{scheduled: true, id: id} ->
+          id
 
-        new_id
-      end)
+        _ ->
+          nil
+      end
+    end)
+    |> case do
+      nil ->
+        {:noreply, put_flash(socket, :error, "Failed to schedule video conversion")}
 
-    {:noreply, redirect(socket, to: ~p"/video/#{id}")}
+      id ->
+        {:noreply, redirect(socket, to: ~p"/video/#{id}")}
+    end
   end
 
   @impl true

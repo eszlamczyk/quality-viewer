@@ -11,12 +11,17 @@ defmodule QualityViewer.ConvertScheduler do
 
   def schedule(path, id) do
     new_path = Path.dirname(path) <> "/basefile.mp4"
-    File.rename!(path, new_path)
 
-    for quality <- available_versions() do
-      Queue.enqueue(new_path, quality, id)
+    case File.rename(path, new_path) do
+      :ok ->
+        for quality <- available_versions() do
+          Queue.enqueue(new_path, quality, id)
+        end
+
+        %{scheduled: true, id: id}
+
+      {:error, error_message} ->
+        %{scheduled: false, message: error_message}
     end
-
-    %{scheduled: true, id: id}
   end
 end
