@@ -1,5 +1,7 @@
 defmodule QualityViewer.ConvertScheduler do
-  defp available_versions() do
+  alias QualityViewer.Transcode.Queue
+
+  def available_versions() do
     [
       {"360p", "640x360"},
       {"480p", "854x480"},
@@ -7,11 +9,19 @@ defmodule QualityViewer.ConvertScheduler do
     ]
   end
 
-  def schedule(id) do
-    for {_label, _resloution} <- available_versions() do
-      # que Transcode at QualityViewer.Transcode
-    end
+  def schedule(path, id) do
+    new_path = Path.dirname(path) <> "/basefile.mp4"
 
-    %{scheduled: true, id: id}
+    case File.rename(path, new_path) do
+      :ok ->
+        for quality <- available_versions() do
+          Queue.enqueue(new_path, quality, id)
+        end
+
+        %{scheduled: true, id: id}
+
+      {:error, error_message} ->
+        %{scheduled: false, message: error_message}
+    end
   end
 end
