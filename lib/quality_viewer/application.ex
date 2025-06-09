@@ -17,6 +17,8 @@ defmodule QualityViewer.Application do
       # {QualityViewer.Worker, arg},
       # Start to serve requests, typically the last entry
       QualityViewerWeb.Endpoint,
+      QualityViewer.Repo,
+      # Queue for scheduling transcoding tasks
       QualityViewer.Transcode.Queue
     ]
 
