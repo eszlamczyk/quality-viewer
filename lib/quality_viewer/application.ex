@@ -9,6 +9,7 @@ defmodule QualityViewer.Application do
   def start(_type, _args) do
     children = [
       QualityViewerWeb.Telemetry,
+      QualityViewer.Repo,
       {DNSCluster, query: Application.get_env(:quality_viewer, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: QualityViewer.PubSub},
       # Start the Finch HTTP client for sending emails
@@ -17,8 +18,6 @@ defmodule QualityViewer.Application do
       # {QualityViewer.Worker, arg},
       # Start to serve requests, typically the last entry
       QualityViewerWeb.Endpoint,
-      QualityViewer.Repo,
-      # Queue for scheduling transcoding tasks
       QualityViewer.Transcode.Queue
     ]
 

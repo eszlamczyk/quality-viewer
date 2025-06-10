@@ -7,7 +7,7 @@ defmodule QualityViewerWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_quality_viewer_key",
-    signing_salt: "wRnRYOue",
+    signing_salt: "PxXvojdH",
     same_site: "Lax"
   ]
 
@@ -31,6 +31,7 @@ defmodule QualityViewerWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :quality_viewer
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,

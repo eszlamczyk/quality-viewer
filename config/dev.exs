@@ -1,5 +1,15 @@
 import Config
 
+# Configure your database
+config :quality_viewer, QualityViewer.Repo,
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  database: "quality_viewer_dev",
+  stacktrace: true,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -13,7 +23,7 @@ config :quality_viewer, QualityViewerWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "GpJFG2XX0aLT0LTLpVdzXGUjffgfrqiyOgsxJKl4ZqbN+mD/SZzjVHEeaJZsXvAE",
+  secret_key_base: "KjtH+uikahLG5xJP4JGZc5P8XHmEcoKyu/bXTLoDMw8JU7mu+yXQ5size4zO+ECq",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:quality_viewer, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:quality_viewer, ~w(--watch)]}
