@@ -2,6 +2,8 @@ defmodule QualityViewer.Videos do
   alias QualityViewer.Videos.Video
   alias QualityViewer.Repo
 
+  def get_video!(id), do: Repo.get!(Video, id)
+
   def create_video(attrs) do
     %Video{}
     |> Video.changeset(attrs)
