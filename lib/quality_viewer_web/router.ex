@@ -22,9 +22,6 @@ defmodule QualityViewerWeb.Router do
 
     get "/", PageController, :home
     get "/video/:id/:quality", VideoController, :show
-
-    live "/video/:id", VideoLive
-    live "/upload", UploadLive
   end
 
   # Other scopes may use custom stacks.
@@ -72,6 +69,8 @@ defmodule QualityViewerWeb.Router do
       on_mount: [{QualityViewerWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/video/:id", VideoLive
+      live "/upload", UploadLive
     end
   end
 

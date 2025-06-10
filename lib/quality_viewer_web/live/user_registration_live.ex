@@ -30,7 +30,7 @@ defmodule QualityViewerWeb.UserRegistrationLive do
         <.error :if={@check_errors}>
           Oops, something went wrong! Please check the errors below.
         </.error>
-
+        <.input field={@form[:username]} label="Username" required />
         <.input field={@form[:email]} type="email" label="Email" required />
         <.input field={@form[:password]} type="password" label="Password" required />
 
