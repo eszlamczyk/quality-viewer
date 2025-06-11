@@ -1,4 +1,5 @@
 defmodule QualityViewerWeb.UploadLive do
+  alias Ecto.UUID
   alias QualityViewer.Videos.Video
   use QualityViewerWeb, :live_view
   alias QualityViewer.ConvertScheduler
@@ -27,11 +28,14 @@ defmodule QualityViewerWeb.UploadLive do
         _ -> :public
       end
 
+    video_url = UUID.generate()
+
     video_attrs = %{
       status: video_status,
       owner_id: current_user.id,
       description: desc,
-      release_date: NaiveDateTime.utc_now()
+      release_date: NaiveDateTime.utc_now(),
+      url: video_url
     }
 
     IO.inspect(video_attrs)
@@ -39,12 +43,11 @@ defmodule QualityViewerWeb.UploadLive do
     result =
       consume_uploaded_entries(socket, :video, fn %{path: path}, _entry ->
         with {:ok, video} <- QualityViewer.Videos.create_video(video_attrs),
-             id_base32 = Base.encode32("#{video.id}"),
-             dir_path = "tmp/QualityViewer/videos/#{id_base32}",
+             dir_path = "tmp/QualityViewer/videos/#{video_url}",
              :ok <- File.mkdir_p(dir_path),
              original_file_path = Path.join(dir_path, Path.basename(path)),
              :ok <- File.cp(path, original_file_path),
-             %{scheduled: true} <- ConvertScheduler.schedule(original_file_path, id_base32) do
+             %{scheduled: true} <- ConvertScheduler.schedule(original_file_path, video_url) do
           {:ok, video}
         else
           err ->
@@ -59,7 +62,7 @@ defmodule QualityViewerWeb.UploadLive do
 
     case result do
       [video = %Video{}] ->
-        {:noreply, redirect(socket, to: ~p"/video/#{Base.encode32("#{video.id}")}")}
+        {:noreply, redirect(socket, to: ~p"/video/#{video.url}")}
 
       reason ->
         {:noreply, put_flash(socket, :error, "Upload failed: #{inspect(reason)}")}

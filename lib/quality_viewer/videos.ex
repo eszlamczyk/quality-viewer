@@ -4,6 +4,8 @@ defmodule QualityViewer.Videos do
 
   def get_video!(id), do: Repo.get!(Video, id)
 
+  def get_video_by_uuid!(uuid), do: Repo.get_by!(Video, url: uuid)
+
   def create_video(attrs) do
     %Video{}
     |> Video.changeset(attrs)

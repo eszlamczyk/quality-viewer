@@ -3,6 +3,7 @@ defmodule QualityViewer.Videos.Video do
   import Ecto.Changeset
 
   schema "videos" do
+    field :url, :string
     field :status, Ecto.Enum, values: [:private, :public]
     belongs_to :owner, QualityViewer.Accounts.User
     field :description, :string
@@ -11,8 +12,9 @@ defmodule QualityViewer.Videos.Video do
 
   def changeset(video, attrs) do
     video
-    |> cast(attrs, [:status, :owner_id, :description, :release_date])
-    |> validate_required([:status, :owner_id, :release_date])
+    |> cast(attrs, [:url, :status, :owner_id, :description, :release_date])
+    |> validate_required([:url, :status, :owner_id, :release_date])
     |> validate_length(:description, max: 255)
+    |> unique_constraint(:url)
   end
 end

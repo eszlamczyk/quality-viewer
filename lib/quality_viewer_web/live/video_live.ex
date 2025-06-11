@@ -9,7 +9,7 @@ defmodule QualityViewerWeb.VideoLive do
       Phoenix.PubSub.subscribe(QualityViewer.PubSub, "video:#{id}")
     end
 
-    video = Videos.get_video!(Base.decode32!(id))
+    video = Videos.get_video_by_uuid!(id)
 
     {:ok,
      assign(socket,
