@@ -1,4 +1,5 @@
 defmodule QualityViewerWeb.VideoLive do
+  alias QualityViewer.Videos
   use QualityViewerWeb, :live_view
   alias QualityViewer.ConvertScheduler
 
@@ -8,7 +9,15 @@ defmodule QualityViewerWeb.VideoLive do
       Phoenix.PubSub.subscribe(QualityViewer.PubSub, "video:#{id}")
     end
 
-    {:ok, assign(socket, id: id, ready: get_ready_videos(id))}
+    video = Videos.get_video_by_uuid!(id)
+
+    {:ok,
+     assign(socket,
+       id: id,
+       ready: get_ready_videos(id),
+       video: video,
+       selected_quality: "360p"
+     )}
   end
 
   defp get_ready_videos(id) do
@@ -41,4 +50,11 @@ defmodule QualityViewerWeb.VideoLive do
   def handle_info(:transcode_start, socket) do
     {:noreply, put_flash(socket, :info, "Video #{socket.assigns.id} started to transcode!")}
   end
+
+  @impl true
+  def handle_event("change_quality", %{"quality" => quality}, socket) do
+    {:noreply, assign(socket, :selected_quality, quality)}
+  end
+
+  defp video_src(id, quality), do: ~p"/video/#{id}/#{quality}"
 end

@@ -3,6 +3,7 @@ defmodule QualityViewer.Accounts.User do
   import Ecto.Changeset
 
   schema "users" do
+    field :username, :string
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
@@ -37,9 +38,17 @@ defmodule QualityViewer.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:username, :email, :password])
+    |> validate_username(opts)
     |> validate_email(opts)
     |> validate_password(opts)
+  end
+
+  defp validate_username(changeset, opts) do
+    changeset
+    |> validate_required([:username])
+    |> validate_length(:username, min: 3)
+    |> maybe_validate_unique_username(opts)
   end
 
   defp validate_email(changeset, opts) do
@@ -83,6 +92,16 @@ defmodule QualityViewer.Accounts.User do
       changeset
       |> unsafe_validate_unique(:email, QualityViewer.Repo)
       |> unique_constraint(:email)
+    else
+      changeset
+    end
+  end
+
+  defp maybe_validate_unique_username(changeset, opts) do
+    if Keyword.get(opts, :validate_username, true) do
+      changeset
+      |> unsafe_validate_unique(:username, QualityViewer.Repo)
+      |> unique_constraint(:username)
     else
       changeset
     end

@@ -1,8 +1,18 @@
 <div class="min-h-screen bg-[#cab2fb] p-6 flex flex-col items-center">
   <div class="w-full max-w-5xl bg-[#36135a] text-white rounded-2xl shadow-lg p-6 space-y-8">
     <h2 class="text-3xl font-bold text-[#cab2fb] text-center">
-      Video Status: <span class="text-[#7e61ab]">(ID: {@id})</span>
+      Video Status: <span class="text-[#7e61ab]">(ID: {@id} status: {@video.status})</span>
     </h2>
+
+    <h3 class="text-2xl text-center">
+      <!-- in future development place here owner name -->
+      Author:
+      {@video.owner_id}
+    </h3>
+
+    <p class="text-center">
+      Description: {@video.description}
+    </p>
 
     <%= if msg = Phoenix.Flash.get(@flash, :info) do %>
       <div class="bg-[#9656ce] text-white p-4 rounded-lg shadow-inner text-center">
@@ -10,22 +20,29 @@
       </div>
     <% end %>
 
-    <ul class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <%= for quality <- ["360p", "480p", "720p"] do %>
-        <li class="bg-[#5b209a] rounded-xl p-6 flex flex-col items-center justify-center text-center shadow-md">
-          <p class="text-xl font-semibold text-[#cab2fb] mb-4">{quality}</p>
-          <%= if Map.has_key?(@ready, quality) do %>
-            <video
-              controls
-              class="w-full max-w-[640px] aspect-video rounded-lg border-2 border-[#cab2fb] shadow-md"
-              src={~p"/video/#{@id}/#{quality}"}
-            >
-            </video>
-          <% else %>
-            <span class="italic text-[#cab2fb] text-lg">Processing...</span>
+    <div>
+      <.form :let={_f} for={%{}} phx-change="change_quality">
+        <select name="quality" class="text-black" id="quality-selector">
+          <%= for quality <- ["360p", "480p", "720p"] do %>
+            <option value={quality} selected={quality == @selected_quality}>{quality}</option>
           <% end %>
-        </li>
-      <% end %>
-    </ul>
+        </select>
+      </.form>
+
+      <div class="video-container">
+        <% quality = @selected_quality %>
+        <%= if Map.has_key?(@ready, quality) do %>
+          <video
+            controls
+            id="video-player"
+            class="w-full max-w-[640px] aspect-video rounded-lg border-2 border-[#cab2fb] shadow-md"
+            src={video_src(@id, quality)}
+          >
+          </video>
+        <% else %>
+          <span class="italic text-[#cab2fb] text-lg">Processing...</span>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

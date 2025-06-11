@@ -2,24 +2,67 @@
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4">
       <a href="/">
-        <p class="bg-purple-300 bg-opacity-30 text-purple-600 rounded-lg px-2 font-semibold leading-6 scale-230">
-          LiveTube, wcale nie clon
+        <p class="bg-purple-300 bg-opacity-30 text-purple-600 rounded-lg px-4 p-2 font-semibold leading-6 scale-230">
+          LiveTube
         </p>
       </a>
     </div>
     <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <a href="/upload">
-        Upload a Video
-      </a>
-      <a href="/subscriber">
-        Subscriber's feed
-      </a>
-      <a href="https://github.com/eszlamczyk/quality-viewer" class="hover:text-zinc-700">
-        GitHub
-      </a>
-      <a href="/login">
-        <p class="border-purple-900 border-2 px-2">Login</p>
-      </a>
+      <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+        <li>
+          <.link
+            href="/upload"
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700 flex items-center gap-1.5"
+          >
+            <span class="relative w-4 h-4 flex items-center justify-center">
+              <!-- Vertical Line -->
+              <span class="absolute w-[2px] h-4 bg-black"></span>
+              <!-- Horizontal Line -->
+              <span class="absolute w-4 h-[2px] bg-black"></span>
+            </span>
+            Upload a video
+          </.link>
+        </li>
+        <li>
+          <.link
+            href="/subscriber"
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Subscriber's feed
+          </.link>
+        </li>
+        <%= if @current_user do %>
+          <li class="text-[0.8125rem] leading-6 text-zinc-900">
+            {@current_user.username}
+          </li>
+          <li>
+            <.link
+              href={~p"/users/settings"}
+              class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+            >
+              Settings
+            </.link>
+          </li>
+          <li>
+            <.link
+              href={~p"/users/log_out"}
+              method="delete"
+              class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+            >
+              Log out
+            </.link>
+          </li>
+        <% else %>
+          <li>
+            <.link
+              href={~p"/users/log_in"}
+              class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+            >
+              Log in
+            </.link>
+          </li>
+        <% end %>
+      </ul>
     </div>
   </div>
 </header>

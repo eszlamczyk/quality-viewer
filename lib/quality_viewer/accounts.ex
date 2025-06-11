@@ -10,6 +10,10 @@ defmodule QualityViewer.Accounts do
 
   ## Database getters
 
+  def get_user_by_username(username) when is_binary(username) do
+    Repo.get_by(User, username: username)
+  end
+
   @doc """
   Gets a user by email.
 
@@ -349,5 +353,13 @@ defmodule QualityViewer.Accounts do
       {:ok, %{user: user}} -> {:ok, user}
       {:error, :user, changeset, _} -> {:error, changeset}
     end
+  end
+
+  @doc """
+  Deletes user
+
+  """
+  def delete_user(%User{} = user) do
+    Repo.delete(user)
   end
 end

@@ -69,6 +69,16 @@ defmodule QualityViewerWeb.UserSettingsLive do
           </:actions>
         </.simple_form>
       </div>
+      <div>
+        <.simple_form for={%{}} id="delete_account_form" phx-submit="delete_account">
+          <p class="text-sm text-gray-500">
+            Permanently delete your account and all associated data.
+          </p>
+          <:actions>
+            <.button class="bg-red-800" phx-disable-with="Deleting...">Delete Account</.button>
+          </:actions>
+        </.simple_form>
+      </div>
     </div>
     """
   end
@@ -162,6 +172,23 @@ defmodule QualityViewerWeb.UserSettingsLive do
 
       {:error, changeset} ->
         {:noreply, assign(socket, password_form: to_form(changeset))}
+    end
+  end
+
+  def handle_event("delete_account", _params, socket) do
+    user = socket.assigns.current_user
+
+    case Accounts.delete_user(user) do
+      {:ok, _} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Account deleted successfully.")
+         |> redirect(to: ~p"/")}
+
+      {:error, _reason} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "Failed to delete account. Please try again later.")}
     end
   end
 end
