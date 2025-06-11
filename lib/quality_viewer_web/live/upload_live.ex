@@ -38,7 +38,6 @@ defmodule QualityViewerWeb.UploadLive do
       url: video_url
     }
 
-    IO.inspect(video_attrs)
 
     result =
       consume_uploaded_entries(socket, :video, fn %{path: path}, _entry ->
