@@ -10,8 +10,6 @@ defmodule QualityViewerWeb.ChannelPageLive do
 
     subscription_status = Subscriptions.get_subscription_by_users(current_user.id, channel_id)
 
-    IO.inspect(subscription_status)
-
     case subscription_status do
       %Subscriptions.Subscription{} = sub_record ->
         {:ok,
