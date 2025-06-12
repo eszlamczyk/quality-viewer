@@ -72,6 +72,7 @@ defmodule QualityViewerWeb.Router do
       on_mount: [{QualityViewerWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/channel/:channel_id", ChannelPageLive
     end
   end
 
